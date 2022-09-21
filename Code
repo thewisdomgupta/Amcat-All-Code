@@ -1,0 +1,607 @@
+// Java program to generate binary numbers from 1 to n
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class GenerateBinary {
+    // This function uses queue data structure to print
+    // binary numbers
+    static void generatePrintBinary(int n)
+    {
+        // Create an empty queue of strings
+        Queue<String> q = new LinkedList<String>();
+
+        // Enqueue the first binary number
+        q.add("1");
+
+        // This loops is like BFS of a tree with 1 as root
+        // 0 as left child and 1 as right child and so on
+        while (n-- > 0) {
+            // print the front of queue
+            String s1 = q.peek();
+            q.remove();
+            System.out.println(s1);
+
+            // Store s1 before changing it
+            String s2 = s1;
+
+            // Append "0" to s1 and enqueue it
+            q.add(s1 + "0");
+
+            // Append "1" to s2 and enqueue it. Note that s2
+            // contains the previous front
+            q.add(s2 + "1");
+        }
+    }
+
+    // Driver code
+    public static void main(String[] args)
+    {
+        int n = 10;
+
+        // Function call
+        generatePrintBinary(n);
+    }
+}
+// Generate Binary Number betn 1 to n using queue
+// https://www.geeksforgeeks.org/interesting-method-generate-binary-numbers-1-n/
+
+
+-------------------------------------------------
+
+//public class GeneratePermutation {
+//}
+
+// Java program to print all permutations of a
+// given string.
+public class GeneratePermutation
+{
+    public static void main(String[] args)
+    {
+        String str = "ABC";
+        int n = str.length();
+        GeneratePermutation permutation = new GeneratePermutation();
+        permutation.permute(str, 0, n-1);
+    }
+
+    /**
+     * permutation function
+     * @param str string to calculate permutation for
+     * @param l starting index
+     * @param r end index
+     */
+    private void permute(String str, int l, int r)
+    {
+        if (l == r)
+            System.out.println(str);
+        else
+        {
+            for (int i = l; i <= r; i++)
+            {
+                str = swap(str,l,i);
+                permute(str, l+1, r);
+                str = swap(str,l,i);
+            }
+        }
+    }
+
+    /**
+     * Swap Characters at position
+     * @param a string value
+     * @param i position 1
+     * @param j position 2
+     * @return swapped string
+     */
+    public String swap(String a, int i, int j)
+    {
+        char temp;
+        char[] charArray = a.toCharArray();
+        temp = charArray[i] ;
+        charArray[i] = charArray[j];
+        charArray[j] = temp;
+        return String.valueOf(charArray);
+    }
+
+}
+
+// Generate all Permutations
+// https://www.geeksforgeeks.org/write-a-c-program-to-print-all-permutations-of-a-given-string/
+
+----------------------------------------------
+
+// Java program for the above approach
+class GFG{
+
+    // Function to find whether String can be
+// made palindromic or not for each queries
+    static void canMakePaliQueries(String str,
+                                   int [][]Q)
+    {
+        int n = str.length();
+
+        // To store the count of ith character
+        // of subString str[0...i]
+        int [][]dp = new int[26][n];
+
+        for(int i = 0; i < 26; i++)
+        {
+
+            // Current character
+            char currentChar = (char)(i + 'a');
+            for(int j = 0; j < n; j++)
+            {
+
+                // Update dp[][] on the basis
+                // recurrence relation
+                if (j == 0)
+                {
+                    dp[i][j] = (str.charAt(j) ==
+                            currentChar) ? 1 : 0;
+                }
+                else
+                {
+                    dp[i][j] = dp[i][j - 1] +
+                            ((str.charAt(j) ==
+                                    currentChar) ? 1 : 0);
+                }
+            }
+        }
+
+        // For each queries
+        for(int []query : Q)
+        {
+            int left = query[0];
+            int right = query[1];
+            int k = query[2];
+
+            // To store the count of
+            // distinct character
+            int unMatchedCount = 0;
+            for(int i = 0; i < 26; i++)
+            {
+
+                // Find occurrence of i + 'a'
+                int occurrence = dp[i][right] -
+                        dp[i][left] +
+                        (str.charAt(left) ==
+                                (i + 'a') ? 1 : 0);
+
+                if (occurrence % 2 == 1)
+                    unMatchedCount++;
+            }
+
+            // Half the distinct Count
+            int ans = unMatchedCount / 2;
+
+            // If half the distinct count is
+            // less than equals to K then
+            // palindromic String can be made
+            if (ans <= k)
+            {
+                System.out.print("YES\n");
+            }
+            else
+            {
+                System.out.print("NO\n");
+            }
+        }
+    }
+
+    // Driver Code
+    public static void main(String[] args)
+    {
+
+        // Given a String str
+        String str = "GeeksforGeeks";
+
+        // Given Queries
+        int [][]Q = { { 1, 5, 3 },
+                { 5, 7, 0 },
+                { 8, 11, 3 },
+                { 3, 10, 5 },
+                { 0, 9, 5 } };
+
+        // Function call
+        canMakePaliQueries(str, Q);
+    }
+}
+
+// Check if String can be made Palindrome by replacing caharacters in given pairs.
+// https://www.geeksforgeeks.org/check-if-a-substring-can-be-palindromic-by-replacing-k-characters-for-q-queries/
+
+
+--------------------------------------------
+
+// Java program to find the length of the
+// longest substring without repeating
+// characters
+import java.io.*;
+import java.util.*;
+
+class Longest{
+
+    // This function returns true if all characters in
+// str[i..j] are distinct, otherwise returns false
+    public static Boolean areDistinct(String str,
+                                      int i, int j)
+    {
+
+        // Note : Default values in visited are false
+        boolean[] visited = new boolean[26];
+
+        for(int k = i; k <= j; k++)
+        {
+            if (visited[str.charAt(k) - 'a'] == true)
+                return false;
+
+            visited[str.charAt(k) - 'a'] = true;
+        }
+        return true;
+    }
+
+    // Returns length of the longest substring
+// with all distinct characters.
+    public static int longestUniqueSubsttr(String str)
+    {
+        int n = str.length();
+
+        // Result
+        int res = 0;
+
+        for(int i = 0; i < n; i++)
+            for(int j = i; j < n; j++)
+                if (areDistinct(str, i, j))
+                    res = Math.max(res, j - i + 1);
+
+        return res;
+    }
+
+    // Driver code
+    public static void main(String[] args)
+    {
+        String str = "geeksforgeeks";
+        System.out.println("The input string is " + str);
+
+        int len = longestUniqueSubsttr(str);
+
+        System.out.println("The length of the longest " +
+                "non-repeating character " +
+                "substring is " + len);
+    }
+}
+
+// Find Longest Substring without repeating characters
+// https://www.geeksforgeeks.org/length-of-the-longest-substring-without-repeating-characters/
+
+
+--------------------------------------------------
+
+// Java Program for the above approach
+class Middle {
+
+    Node head;
+
+    /*Creating a new Node*/
+    class Node {
+        int data;
+        Node next;
+        public Node(int data)
+        {
+            this.data = data;
+            this.next = null;
+        }
+    }
+
+    /*Function to add a new Node*/
+    public void pushNode(int data)
+    {
+        Node new_node = new Node(data);
+        new_node.next = head;
+        head = new_node;
+    }
+
+    /*Displaying the elements in the list*/
+    public void printNode()
+    {
+        Node temp = head;
+        while (temp != null) {
+            System.out.print(temp.data + "->");
+            temp = temp.next;
+        }
+        System.out.print("Null"+"\n");
+    }
+
+    /*Finding the length of the list.*/
+    public int getLen()
+    {
+        int length = 0;
+        Node temp = head;
+        while (temp != null) {
+            length++;
+            temp = temp.next;
+        }
+        return length;
+    }
+
+    /*Printing the middle element of the list.*/
+    public void printMiddle()
+    {
+        if (head != null) {
+            int length = getLen();
+            Node temp = head;
+            int middleLength = length / 2;
+            while (middleLength != 0) {
+                temp = temp.next;
+                middleLength--;
+            }
+            System.out.print("The middle element is ["
+                    + temp.data + "]");
+            System.out.println();
+        }
+    }
+
+    public static void main(String[] args)
+    {
+        Middle list = new Middle();
+        for (int i = 5; i >= 1; i--) {
+            list.pushNode(i);
+            list.printNode();
+            list.printMiddle();
+        }
+    }
+}
+
+// WAP to Find Middle Node.
+
+// https://www.geeksforgeeks.org/write-a-c-function-to-print-the-middle-of-the-linked-list/
+
+
+-----------------------------------------
+
+//public class palindromelowercase {
+//}
+// Java program for the above approach
+import java.io.*;
+
+class palindromelowercase{
+
+    // Function to obtain the length of
+// the longest palindromic substring
+    static int longestPalSubstr(String str)
+    {
+
+        // Length of given string
+        int n = str.length();
+
+        // Stores the maximum length
+        int maxLength = 1, start = 0;
+
+        // Iterate over the string
+        for(int i = 0; i < str.length(); i++)
+        {
+
+            // Iterate over the string
+            for(int j = i; j < str.length(); j++)
+            {
+                int flag = 1;
+
+                // Check for palindrome
+                for(int k = 0;
+                    k < (j - i + 1) / 2; k++)
+                    if (str.charAt(i + k) !=
+                            str.charAt(j - k))
+                        flag = 0;
+
+                // If string [i, j - i + 1]
+                // is palindromic
+                if (flag != 0 &&
+                        (j - i + 1) > maxLength)
+                {
+                    start = i;
+                    maxLength = j - i + 1;
+                }
+            }
+        }
+
+        // Return length of LPS
+        return maxLength;
+    }
+
+    // Driver Code
+    public static void main (String[] args)
+    {
+
+        // Given string
+        String str = "forgeeksskeegfor";
+
+        // Function call
+        System.out.print(longestPalSubstr(str));
+    }
+}
+
+// contains lowercase alphabets
+// https://www.geeksforgeeks.org/length-of-longest-palindrome-substring/
+
+---------------------------------
+
+// Java Program to Reverse a String using Stack
+
+import java.io.*;
+import java.util.*;
+
+class ReverseUsingStack {
+
+    public static String ReverseString(String str)
+    {
+        char[] reverseString = new char[str.length()];
+        // Declare a stack of type Character
+        Stack<Character> stack = new Stack<Character>();
+
+        // Traverse the String and push the character one by
+        // one into the Stack
+        for (int i = 0; i < str.length(); i++) {
+            // push the character into the Stack
+            stack.push(str.charAt(i));
+        }
+
+        // Now Pop the Characters from the stack until it
+        // becomes empty
+
+        int i = 0;
+        while (!stack.isEmpty()) { // popping element until
+            // stack become empty
+            // get the character from the top of the stack
+            reverseString[i++] = stack.pop();
+        }
+        // return string object
+        return new String(reverseString);
+    }
+
+    // Driver code
+    public static void main(String[] args)
+    {
+        String str1 = "GeeksForGeeks";
+
+        // call the function
+        System.out.println(str1 + " <- Reverse -> "
+                + ReverseString(str1));
+
+        String str2 = "Hello World";
+
+        // call the function
+        System.out.println(str2 + " <- Reverse -> "
+                + ReverseString(str2));
+    }
+}
+
+// Reverse using stack
+// https://www.geeksforgeeks.org/java-program-to-reverse-a-string-using-stack/
+
+
+---------------------------------
+
+// Java program to implement
+// the above approach
+import java.util.*;
+
+class TwoStack
+{
+
+    static int lower_bound(int []a, int val) {
+        int lo = 0, hi = a.length - 1;
+        while (lo < hi) {
+            int mid = (int)Math.floor(lo + (double)(hi - lo) / 2);
+            if (a[mid] < val)
+                lo = mid + 1;
+            else
+                hi = mid;
+        }
+        return lo;
+    }
+
+    // Function to find the
+// maximum number of elements
+    static int maxNumbers(int []stack1, int N, int []stack2,
+                          int M, int K) {
+
+        // Take prefix of both the stack
+        int []sumA = new int[N + 1];
+        for(int i = 0; i < N + 1; i++) {
+            sumA[i] = 0;
+        }
+
+        int []sumB = new int[M + 1];
+        for(int i = 0; i < M + 1; i++) {
+            sumB[i] = 0;
+        }
+
+        for (int i = 0; i < N; i++)
+            sumA[i + 1] = sumA[i] + stack1[i];
+
+        for (int i = 0; i < M; i++)
+            sumB[i + 1] = sumB[i] + stack2[i];
+
+        // Calculate maxNumbers
+        int MaxNumbers = 0;
+        for (int i = 0; i <= N; i++) {
+
+            // Calculate remaining value of K
+            // after selecting numbers
+            // from 1st stack
+            int remValueOfK = K - sumA[i];
+
+            // If rem value of K is less than 0
+            // continue the loop
+            if (remValueOfK < 0)
+                continue;
+
+            // Calculate lower bound
+            int lowerBound
+                    = lower_bound(sumB,
+                    remValueOfK);
+
+
+            // If size of lower bound is greater
+            // than self stack size or
+            // value of lower bound element
+            // decrement lowerBound
+            if (lowerBound > M
+                    || sumB[lowerBound] > remValueOfK) {
+                lowerBound--;
+            }
+
+            // Store max possible numbers
+            int books = i + lowerBound;
+            MaxNumbers = Math.max(MaxNumbers, books);
+        }
+        return MaxNumbers;
+    }
+
+    // Driver Code
+    public static void main(String args[])
+    {
+        int []stack1 = {60, 90, 120};
+        int []stack2 = {100, 10, 10, 200};
+        int K = 130;
+        int N = 3;
+        int M = 4;
+        int ans = maxNumbers(stack1, N, stack2, M, K);
+        System.out.println(ans);
+
+    }
+}
+
+// count maximum number of integer from 2 stack having sum less than or equal to K.
+// https://www.geeksforgeeks.org/maximum-count-of-integers-to-be-chosen-from-given-two-stacks-having-sum-at-most-k/
+
+
+------------------------------------
+
+
+
+// java program to reverse a word
+
+import java.io.*;
+import java.util.Scanner;
+
+class WithoutStack {
+    public static void main (String[] args) {
+
+        String str= "Geeks", nstr="";
+        char ch;
+
+        System.out.print("Original word: ");
+        System.out.println("Geeks"); //Example word
+
+        for (int i=0; i<str.length(); i++)
+        {
+            ch= str.charAt(i); //extracts each character
+            nstr= ch+nstr; //adds each character in front of the existing string
+        }
+        System.out.println("Reversed word: "+ nstr);
+    }
+}
+
+//Contributed by Tiyasa
+// https://www.geeksforgeeks.org/reverse-a-string-in-java/
+
